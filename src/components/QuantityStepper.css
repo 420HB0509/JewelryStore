@@ -1,0 +1,41 @@
+.qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+}
+
+.qty__btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 48px;
+  color: var(--ink);
+  transition: background-color 0.2s var(--ease);
+}
+
+.qty__btn:hover:not(:disabled) {
+  background: var(--cream);
+}
+
+.qty__btn:disabled {
+  color: #bfb5a8;
+}
+
+.qty__value {
+  min-width: 32px;
+  text-align: center;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+.qty--sm .qty__btn {
+  width: 40px;
+  height: 40px;
+}
+
+.qty--sm .qty__value {
+  min-width: 26px;
+  font-size: 14px;
+}

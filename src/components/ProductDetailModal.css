@@ -1,0 +1,433 @@
+.pdm {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: none;
+  visibility: hidden;
+  transition: visibility 0s linear 0.5s;
+}
+
+.pdm.is-open {
+  pointer-events: auto;
+  visibility: visible;
+  transition: visibility 0s;
+}
+
+.pdm__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(31, 27, 23, 0.45);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+
+.pdm.is-open .pdm__backdrop {
+  opacity: 1;
+}
+
+/* Mobile: bottom sheet */
+.pdm__dialog {
+  position: relative;
+  width: 100%;
+  max-height: 94svh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--ivory);
+  border-radius: 16px 16px 0 0;
+  transform: translateY(100%);
+  transition: transform 0.5s var(--ease);
+  outline: none;
+}
+
+.pdm.is-open .pdm__dialog {
+  transform: none;
+}
+
+.pdm__close {
+  position: sticky;
+  top: 10px;
+  float: right;
+  margin: 10px 10px -54px 0;
+  z-index: 3;
+  background: rgba(251, 248, 243, 0.9);
+}
+
+.pdm__grid {
+  display: grid;
+}
+
+.pdm__gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pdm__main {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  max-height: 58svh;
+  overflow: hidden;
+  background: var(--cream);
+}
+
+.pdm__main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: pdm-fade 0.5s var(--ease);
+}
+
+@keyframes pdm-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.pdm__badges {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  gap: 6px;
+}
+
+.pdm__thumbs {
+  display: flex;
+  gap: 8px;
+  padding-inline: var(--gutter);
+}
+
+.pdm__thumb {
+  width: 56px;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  opacity: 0.55;
+  border: 1px solid transparent;
+  transition: opacity 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+
+.pdm__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pdm__thumb.is-active,
+.pdm__thumb:hover {
+  opacity: 1;
+  border-color: var(--ink);
+}
+
+.pdm__info {
+  padding: 22px var(--gutter) calc(28px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+}
+
+.pdm__info .eyebrow {
+  margin-bottom: 8px;
+}
+
+.pdm__title {
+  font-size: clamp(30px, 7vw, 42px);
+  font-weight: 400;
+}
+
+.pdm__price {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 10px;
+  font-size: 19px;
+}
+
+.pdm__save {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+
+.pdm__stock {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.pdm__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--success);
+}
+
+.pdm__stock--low .pdm__dot {
+  background: var(--champagne);
+}
+
+.pdm__stock--out .pdm__dot {
+  background: var(--danger);
+}
+
+.pdm__desc {
+  margin-top: 18px;
+  color: var(--ink-soft);
+  font-weight: 300;
+  line-height: 1.7;
+}
+
+.pdm__specs {
+  margin: 20px 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.pdm__specs div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.pdm__specs dt {
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.pdm__specs dd {
+  margin: 0;
+  text-align: right;
+}
+
+.pdm__details {
+  margin: 14px 0 0;
+  padding-left: 18px;
+  font-size: 14px;
+  color: var(--ink-soft);
+  font-weight: 300;
+}
+
+.pdm__field {
+  border: 0;
+  margin: 22px 0 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.pdm__field legend {
+  padding: 0;
+  margin-bottom: 10px;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.pdm__field legend strong {
+  color: var(--ink);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  font-size: 14px;
+}
+
+.pdm__swatches,
+.pdm__sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.swatch {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: border-color 0.25s var(--ease);
+}
+
+.swatch.is-active {
+  border-color: var(--ink);
+}
+
+.swatch__dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(31, 27, 23, 0.12);
+}
+
+.size-opt {
+  min-width: 56px;
+  height: 44px;
+  padding: 0 14px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  cursor: pointer;
+  background: var(--white);
+  transition: border-color 0.25s var(--ease), background-color 0.25s var(--ease), color 0.25s var(--ease);
+}
+
+.size-opt:hover {
+  border-color: var(--ink);
+}
+
+.size-opt.is-active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--ivory);
+}
+
+.swatch:has(input:focus-visible),
+.size-opt:has(input:focus-visible) {
+  outline: 2px solid var(--champagne);
+  outline-offset: 2px;
+}
+
+.pdm__hint {
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.pdm__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+/* Mobile: keep quantity + add-to-bag in reach while scrolling the sheet */
+@media (max-width: 899px) {
+  .pdm__actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    margin-inline: calc(var(--gutter) * -1);
+    padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom));
+    background: var(--ivory);
+    box-shadow: 0 -10px 24px -18px rgba(31, 27, 23, 0.35);
+  }
+}
+
+.pdm__add {
+  flex: 1;
+  min-width: 0;
+}
+
+.pdm__error {
+  min-height: 22px;
+  margin-top: 8px;
+  font-size: 13.5px;
+  color: var(--danger);
+}
+
+.pdm__continue {
+  align-self: center;
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  color: var(--muted);
+  padding: 4px 8px;
+}
+
+.pdm__ask {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--line);
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+
+.pdm__ask svg {
+  color: var(--wa-deep);
+  flex: none;
+}
+
+.pdm__ask:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Desktop: centered two-column dialog */
+@media (min-width: 900px) {
+  .pdm {
+    align-items: center;
+    padding: 32px;
+  }
+
+  .pdm__dialog {
+    width: min(1080px, 100%);
+    max-height: min(88vh, 780px);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transform: translateY(24px) scale(0.98);
+    opacity: 0;
+    transition: transform 0.5s var(--ease), opacity 0.4s var(--ease);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .pdm.is-open .pdm__dialog {
+    opacity: 1;
+  }
+
+  .pdm__close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    float: none;
+    margin: 0;
+  }
+
+  .pdm__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    max-height: min(88vh, 780px);
+  }
+
+  .pdm__gallery {
+    position: relative;
+    flex-direction: row;
+    gap: 0;
+    background: var(--cream);
+  }
+
+  .pdm__main {
+    flex: 1;
+    max-height: none;
+    aspect-ratio: auto;
+  }
+
+  .pdm__thumbs {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    padding: 0;
+  }
+
+  .pdm__thumb {
+    border-color: rgba(251, 248, 243, 0.6);
+    width: 60px;
+  }
+
+  .pdm__info {
+    overflow-y: auto;
+    padding: 56px 48px 40px;
+  }
+}

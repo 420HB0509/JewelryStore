@@ -1,0 +1,78 @@
+/* Sits just under the sticky header so it never collides with the
+   floating WhatsApp button or the bottom of the screen on phones. */
+.toast-region {
+  position: fixed;
+  top: calc(var(--header-h) + 10px);
+  left: 0;
+  right: 0;
+  z-index: 110;
+  display: flex;
+  justify-content: center;
+  padding-inline: 12px;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(460px, 100%);
+  padding: 10px 8px 10px 14px;
+  background: var(--ink);
+  color: var(--ivory);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lift);
+  animation: toast-in 0.45s var(--ease);
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: none; }
+}
+
+.toast__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--champagne);
+  color: var(--ink);
+}
+
+.toast__msg {
+  flex: 1;
+  min-width: 0;
+  font-size: 13.5px;
+  line-height: 1.35;
+}
+
+.toast__action {
+  flex: none;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--champagne-soft);
+  padding: 10px 8px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.toast__close {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  color: rgba(251, 248, 243, 0.7);
+}
+
+@media (min-width: 900px) {
+  .toast-region {
+    justify-content: flex-end;
+    padding-inline: 28px;
+  }
+}

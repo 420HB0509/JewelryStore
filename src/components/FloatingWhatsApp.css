@@ -1,0 +1,48 @@
+.fab-wa {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, calc(env(safe-area-inset-bottom) + 12px));
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 56px;
+  min-width: 56px;
+  justify-content: center;
+  padding: 0 15px;
+  border-radius: 28px;
+  background: var(--wa);
+  color: #fff;
+  box-shadow: 0 12px 28px -10px rgba(18, 90, 50, 0.55);
+  transition: transform 0.45s var(--ease), opacity 0.35s var(--ease), box-shadow 0.3s var(--ease);
+}
+
+.fab-wa:hover {
+  box-shadow: 0 16px 34px -10px rgba(18, 90, 50, 0.7);
+  transform: translateY(-2px);
+}
+
+.fab-wa__label {
+  display: none;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding-right: 4px;
+}
+
+.fab-wa.is-hidden {
+  opacity: 0;
+  transform: translateY(20px) scale(0.9);
+  pointer-events: none;
+}
+
+@media (min-width: 900px) {
+  .fab-wa {
+    right: 28px;
+    bottom: 28px;
+    padding: 0 20px 0 16px;
+  }
+  .fab-wa__label {
+    display: inline;
+  }
+}

@@ -1,0 +1,52 @@
+.best__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 32px;
+  margin-bottom: 32px;
+}
+
+/* Mobile: a swipeable row that peeks the next card */
+.best__row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 68%;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  margin-inline: calc(var(--gutter) * -1);
+  padding-inline: var(--gutter);
+  scroll-padding-inline: var(--gutter);
+  padding-bottom: 4px;
+  /* keeps the off-screen cards from widening the page on mobile */
+  contain: paint;
+}
+
+.best__row::-webkit-scrollbar {
+  display: none;
+}
+
+.best__item {
+  scroll-snap-align: start;
+  min-width: 0;
+}
+
+@media (min-width: 700px) {
+  .best__row {
+    grid-auto-columns: 40%;
+  }
+}
+
+@media (min-width: 1000px) {
+  .best__row {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+    overflow: visible;
+    margin-inline: 0;
+    padding-inline: 0;
+    contain: none;
+  }
+}
