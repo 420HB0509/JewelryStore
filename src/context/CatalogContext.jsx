@@ -1,5 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { isAvailable, isCollectionVisible, isListed, normalizeCatalog, productsInCollection } from "../../shared/catalog.js";
+import {
+  isAvailable,
+  isCollectionVisible,
+  normalizeCatalog,
+  productsInCollection,
+  storeProducts,
+} from "../../shared/catalog.js";
 import { DEFAULT_CATALOG } from "../catalog/defaultCatalog.js";
 import Wordmark from "../components/Wordmark.jsx";
 
@@ -41,7 +47,7 @@ async function fetchCatalog(signal) {
   try {
     const res = await fetch("/api/catalog", {
       signal,
-      cache: "no-cache",
+      cache: "no-store",
       headers: { accept: "application/json" },
     });
     const type = res.headers.get("content-type") || "";
@@ -87,11 +93,12 @@ export function CatalogProvider({ children }) {
   const value = useMemo(() => {
     if (!catalog) return null;
     const allById = new Map(catalog.products.map((p) => [p.id, p]));
-    const products = catalog.products.filter(isListed);
+    const products = storeProducts(catalog);
+    const onStore = new Set(products.map((p) => p.id));
     const visibleCollections = catalog.collections.filter((c) => isCollectionVisible(c, products));
     return {
       settings: catalog.settings,
-      /** Products shown on the store (turned on, with a photo) */
+      /** Products shown on the store (turned on, with a photo, collection on) */
       products,
       /** Collections that are on and have at least one available piece */
       collections: visibleCollections,
@@ -99,6 +106,7 @@ export function CatalogProvider({ children }) {
       /** Any product by reference, including hidden ones (for saved bags) */
       findProduct: (id) => allById.get(id),
       productsIn: (collection) => productsInCollection(collection, products),
+      isOnStore: (product) => onStore.has(product.id),
       isAvailable,
     };
   }, [catalog]);

@@ -45,6 +45,11 @@ export default function SettingsTab({ catalog, commit, onDirtyChange }) {
 
   useEffect(() => onDirtyChange?.(dirty), [dirty, onDirtyChange]);
 
+  // Once errors are shown, re-check as the fields are corrected
+  useEffect(() => {
+    setErrors((prev) => (Object.keys(prev).length ? validate(draft) : prev));
+  }, [draft]);
+
   const set = (patch) => {
     setDraft((d) => ({ ...d, ...patch }));
     setDirty(true);

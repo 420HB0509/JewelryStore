@@ -13,7 +13,21 @@ const secret = () =>
 
 const sign = (payload) => crypto.createHmac("sha256", secret()).update(payload).digest("base64url");
 
-export const passwordConfigured = () => (process.env.ADMIN_PASSWORD || "").length >= 8;
+export const MIN_PASSWORD_LENGTH = 8;
+
+export const passwordConfigured = () => (process.env.ADMIN_PASSWORD || "").length >= MIN_PASSWORD_LENGTH;
+
+/** Why login is unavailable, or null when the password is set up correctly. */
+export function passwordProblem() {
+  const pw = process.env.ADMIN_PASSWORD || "";
+  if (!pw) return { code: "NO_PASSWORD", message: "The admin password isn't set up yet." };
+  if (pw.length < MIN_PASSWORD_LENGTH)
+    return {
+      code: "PASSWORD_TOO_SHORT",
+      message: `The admin password is too short. Use at least ${MIN_PASSWORD_LENGTH} characters.`,
+    };
+  return null;
+}
 
 export function passwordMatches(input) {
   if (!passwordConfigured() || typeof input !== "string") return false;

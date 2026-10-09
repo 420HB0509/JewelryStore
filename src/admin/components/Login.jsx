@@ -61,11 +61,12 @@ export default function Login({ onLoggedIn, notice }) {
             {error}
           </p>
         )}
-        {code === "NO_PASSWORD" && (
+        {(code === "NO_PASSWORD" || code === "PASSWORD_TOO_SHORT") && (
           <ol className="login__steps">
             <li>Open your project on vercel.com → Settings → Environment Variables.</li>
             <li>
-              Add <code>ADMIN_PASSWORD</code> with a strong password (at least 8 characters).
+              {code === "NO_PASSWORD" ? "Add" : "Edit"} <code>ADMIN_PASSWORD</code> with a strong password (at least 8
+              characters).
             </li>
             <li>Redeploy the project, then come back here.</li>
           </ol>

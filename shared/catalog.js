@@ -198,6 +198,17 @@ export function normalizeCatalog(raw) {
 /** Shown on the store (turned on and has a photo). */
 export const isListed = (p) => Boolean(p) && p.active !== false && p.images?.length > 0;
 
+/**
+ * Products shown on the store: turned on, with a photo, and in a
+ * collection that is turned on. Turning a collection off hides its products.
+ */
+export function storeProducts(catalog) {
+  const activeCollections = new Set(
+    catalog.collections.filter((c) => c.kind === "category" && c.active !== false).map((c) => c.id)
+  );
+  return catalog.products.filter((p) => isListed(p) && activeCollections.has(p.category));
+}
+
 /** Shown and can be ordered. */
 export const isAvailable = (p) => isListed(p) && p.availability !== "sold_out";
 

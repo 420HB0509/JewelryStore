@@ -21,6 +21,7 @@ You manage products, collections and delivery from the **Control Center** at `/a
 3. **Photo storage:** go to **Storage → Create → Blob** and connect it to the project.
 4. **Redeploy:** open **Deployments**, choose the latest deployment, and click **Redeploy** so the new settings take effect.
 5. Open `https://your-site.vercel.app/admin/`, log in, and click **Publish now**.
+   The password must be at least 8 characters, or the login page says it is too short.
 
 Until step 5, the store keeps showing the built-in sample catalog, so nothing breaks while you set things up.
 If a step is missing, the control center tells you which one.
@@ -33,15 +34,16 @@ If a step is missing, the control center tells you which one.
 | **Collections** | Create, rename, reorder, turn on or off, and delete collections, and set a cover photo. Each collection shows whether it's on the store and why. |
 | **Delivery & settings** | WhatsApp number (with a test link), standard delivery fee (fixed or "confirm on WhatsApp"), free-delivery threshold, how per-product fees combine, announcement bar messages, Instagram, and **backup download/restore**. |
 
-Changes go live on the store within about 10 seconds.
+Changes appear on the store as soon as the page is reloaded.
 
 ### How the store decides what to show
 
-- A **product** appears when **Visible** is on and it has at least one photo.
+- A **product** appears when **Visible** is on, it has at least one photo, and its collection is turned on.
   *Out of stock* products stay visible but can't be ordered.
 - A **collection** appears only when it is **turned on** and contains **at least one visible, in-stock product**.
   Empty or fully sold-out collections hide automatically and come back when a product becomes available.
-  *Best Sellers* is automatic: it lists every product labelled *Best seller*.
+  Turning a collection **off** hides the collection *and all of its products*.
+  *Best Sellers* is automatic: it lists every product labelled *Best seller*. Turning it off also hides the "Best sellers" section on the home page.
 - **Delivery:** each product uses the store's standard fee unless you give it its own fee or free delivery.
   When the bag has products with different fees, choose in Settings between:
   - **Charge once per order:** the highest fee in the bag applies.

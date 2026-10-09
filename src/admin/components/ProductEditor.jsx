@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Plus, X } from "lucide-react";
 import { AVAILABILITY, nextProductId } from "../../../shared/catalog.js";
 import { discountPercent, formatPrice } from "../../utils/format.js";
@@ -72,6 +72,11 @@ export default function ProductEditor({ product, catalog, commit, onClose, uploa
   const [confirmClose, setConfirmClose] = useState(false);
   const [sizeInput, setSizeInput] = useState("");
 
+  // Once errors are shown, re-check as the fields are corrected
+  useEffect(() => {
+    setErrors((prev) => (Object.keys(prev).length ? validate(draft) : prev));
+  }, [draft]);
+
   const categories = catalog.collections.filter((c) => c.kind === "category");
   const { settings } = catalog;
 
@@ -142,7 +147,11 @@ export default function ProductEditor({ product, catalog, commit, onClose, uploa
         cat.products = cat.products.map((p) => (p.id === clean.id ? clean : p));
       }
       return cat;
-    }, isNew ? `“${clean.name}” added to your store` : `“${clean.name}” saved`);
+    }, isNew
+      ? clean.active
+        ? `“${clean.name}” added to your store`
+        : `“${clean.name}” saved as a hidden draft`
+      : `“${clean.name}” saved`);
     setSaving(false);
     if (ok) onClose();
   };
@@ -176,9 +185,11 @@ export default function ProductEditor({ product, catalog, commit, onClose, uploa
               showLabel
             />
             <p className="field__hint">
-              {draft.active
-                ? "Customers can see this product."
-                : "Hidden: only you can see it here. Turn it on when it's ready."}
+              {!draft.active
+                ? "Hidden: only you can see it here. Turn it on when it's ready."
+                : catalog.collections.find((c) => c.id === draft.category)?.active === false
+                  ? "Its collection is turned off, so customers can't see it until you turn the collection on."
+                  : "Customers can see this product."}
             </p>
             <Field label="Stock" htmlFor="pe-stock">
               <div className="segmented" role="radiogroup" aria-label="Stock">

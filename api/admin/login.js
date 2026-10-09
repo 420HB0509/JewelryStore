@@ -1,6 +1,6 @@
 /* POST /api/admin/login  { password } → { token, expiresIn } */
 
-import { createToken, passwordConfigured, passwordMatches } from "../_lib/auth.js";
+import { createToken, passwordMatches, passwordProblem } from "../_lib/auth.js";
 import { clientIp, fail, json, readJson } from "../_lib/http.js";
 import { bumpCounter, resetCounter } from "../_lib/storage.js";
 
@@ -8,9 +8,8 @@ const MAX_ATTEMPTS = 8;
 const WINDOW_SECONDS = 15 * 60;
 
 export async function POST(request) {
-  if (!passwordConfigured()) {
-    return fail(503, "The admin password isn't set up yet.", { code: "NO_PASSWORD" });
-  }
+  const problem = passwordProblem();
+  if (problem) return fail(503, problem.message, { code: problem.code });
 
   const key = `login-attempts:${clientIp(request)}`;
   try {

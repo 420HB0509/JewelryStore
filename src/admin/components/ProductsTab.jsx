@@ -21,7 +21,7 @@ const matchesStatus = (p, status) => {
   return true;
 };
 
-export default function ProductsTab({ catalog, commit, onEdit, onAdd }) {
+export default function ProductsTab({ catalog, commit, onEdit, onAdd, toast }) {
   const [query, setQuery] = useState("");
   const [collection, setCollection] = useState("all");
   const [status, setStatus] = useState("all");
@@ -30,6 +30,10 @@ export default function ProductsTab({ catalog, commit, onEdit, onAdd }) {
 
   const collectionName = useMemo(
     () => Object.fromEntries(catalog.collections.map((c) => [c.id, c.name])),
+    [catalog.collections]
+  );
+  const collectionOff = useMemo(
+    () => new Set(catalog.collections.filter((c) => !c.active).map((c) => c.id)),
     [catalog.collections]
   );
 
@@ -183,6 +187,9 @@ export default function ProductsTab({ catalog, commit, onEdit, onAdd }) {
                 </p>
                 <div className="prow__pills">
                   {!p.active && <Pill tone="muted">Hidden</Pill>}
+                  {p.active && collectionOff.has(p.category) && (
+                    <Pill tone="muted">Hidden — collection turned off</Pill>
+                  )}
                   {p.availability === "sold_out" && <Pill tone="danger">Out of stock</Pill>}
                   {p.availability === "low_stock" && <Pill tone="warn">Few left</Pill>}
                   {p.badge === "bestseller" && <Pill>Best seller</Pill>}
@@ -214,6 +221,7 @@ export default function ProductsTab({ catalog, commit, onEdit, onAdd }) {
                     label={`Show ${p.name} on store`}
                     onChange={(v) => {
                       if (v && !p.images.length) {
+                        toast?.("Add a photo first — products need one to be shown on the store.", "error");
                         onEdit(p);
                         return;
                       }

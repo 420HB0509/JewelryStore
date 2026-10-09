@@ -118,7 +118,11 @@ export default function CartDrawer() {
                         </button>
                       </div>
                       {l.unavailable ? (
-                        <p className="citem__warn">This piece is no longer available — please remove it.</p>
+                        <p className="citem__warn">
+                          {l.product.availability === "sold_out"
+                            ? "This piece just sold out — please remove it."
+                            : "This piece is no longer available — please remove it."}
+                        </p>
                       ) : (
                         <div className="citem__bottom">
                           <QuantityStepper

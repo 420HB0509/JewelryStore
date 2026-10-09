@@ -9,7 +9,14 @@ import { ConfirmDialog, Field, Modal, Pill, Switch } from "./ui.jsx";
 function collectionStatus(collection, products) {
   const inCollection = productsInCollection(collection, products);
   const available = inCollection.filter(isAvailable).length;
-  if (!collection.active) return { tone: "muted", label: "Turned off", available, total: inCollection.length };
+  if (!collection.active) {
+    return {
+      tone: "muted",
+      label: collection.kind === "category" ? "Turned off — its products are hidden" : "Turned off",
+      available,
+      total: inCollection.length,
+    };
+  }
   if (!available) {
     return {
       tone: "warn",
@@ -72,7 +79,8 @@ export default function CollectionsTab({ catalog, commit, uploadsMode }) {
         <p>
           A collection appears on your store only when it's <strong>turned on</strong> and has{" "}
           <strong>at least one product that is visible and in stock</strong>. Empty or sold-out collections hide
-          automatically and come back as soon as a product is available.
+          automatically and come back as soon as a product is available. Turning a collection{" "}
+          <strong>off</strong> also hides all of its products.
         </p>
       </div>
 
@@ -117,7 +125,17 @@ export default function CollectionsTab({ catalog, commit, uploadsMode }) {
                   <Switch
                     checked={c.active}
                     label={`Turn ${c.name} on or off`}
-                    onChange={(v) => update(c.id, { active: v }, v ? `${c.name} turned on` : `${c.name} turned off`)}
+                    onChange={(v) =>
+                      update(
+                        c.id,
+                        { active: v },
+                        v
+                          ? `${c.name} turned on`
+                          : c.kind === "category"
+                            ? `${c.name} turned off — its products are hidden from the store`
+                            : `${c.name} turned off`
+                      )
+                    }
                   />
                   <span className="prow__visible-label">{c.active ? "On" : "Off"}</span>
                 </div>

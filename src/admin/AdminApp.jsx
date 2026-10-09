@@ -221,6 +221,7 @@ function ControlCenter() {
             commit={commit}
             onEdit={(p) => setEditing(p)}
             onAdd={() => setEditing("new")}
+            toast={toast}
           />
         )}
         {tab === "collections" && <CollectionsTab catalog={catalog} commit={commit} uploadsMode={storage.uploads} />}

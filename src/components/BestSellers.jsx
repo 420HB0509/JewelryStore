@@ -4,9 +4,11 @@ import ProductCard from "./ProductCard.jsx";
 import "./BestSellers.css";
 
 export default function BestSellers({ onView, onSeeAll }) {
-  const { products, collections, isAvailable } = useCatalog();
+  const { products, collections, allCollections, isAvailable } = useCatalog();
   const items = products.filter((p) => p.badge === "bestseller" && isAvailable(p)).slice(0, 4);
-  if (!items.length) return null;
+  // Turning the Best Sellers collection off in the control center hides this section too
+  const turnedOff = allCollections.some((c) => c.kind === "bestsellers" && c.active === false);
+  if (!items.length || turnedOff) return null;
 
   // Link to the Best Sellers collection when it is shown on the store
   const bestCollection = collections.find((c) => c.kind === "bestsellers");

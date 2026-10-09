@@ -108,7 +108,7 @@ function reducer(state, action) {
 /* ---------- provider ---------- */
 
 export function CartProvider({ children }) {
-  const { findProduct: getProduct } = useCatalog();
+  const { findProduct: getProduct, isOnStore } = useCatalog();
   const [items, dispatch] = useReducer(reducer, getProduct, loadCart);
   const [isOpen, setIsOpen] = useState(false);
   const [toast, setToast] = useState(null);
@@ -146,6 +146,7 @@ export function CartProvider({ children }) {
       const product = getProduct(productId);
       const check = validateSelection(product, variant, quantity);
       if (!check.ok) return check;
+      if (!isOnStore(product)) return { ok: false, error: "This piece is no longer available." };
 
       const key = lineKey(productId, variant);
       const already = itemsRef.current.find((it) => it.key === key)?.quantity || 0;
@@ -163,7 +164,7 @@ export function CartProvider({ children }) {
       );
       return { ok: true };
     },
-    [showToast, getProduct]
+    [showToast, getProduct, isOnStore]
   );
 
   const setQuantity = useCallback((key, quantity) => {
@@ -193,12 +194,12 @@ export function CartProvider({ children }) {
           return {
             ...it,
             product,
-            unavailable: !isListed(product) || product.availability === "sold_out",
+            unavailable: !isOnStore(product) || product.availability === "sold_out",
             lineTotal: product.price * it.quantity,
           };
         })
         .filter(Boolean),
-    [items, getProduct]
+    [items, getProduct, isOnStore]
   );
 
   const count = lines.reduce((n, l) => n + l.quantity, 0);
