@@ -1,16 +1,12 @@
 import { NAV_LINKS, STORE_CONFIG } from "../config/store.js";
-import { generalEnquiryUrl } from "../utils/whatsapp.js";
+import { useCatalog } from "../context/CatalogContext.jsx";
+import { displayNumber, generalEnquiryUrl } from "../utils/whatsapp.js";
 import { InstagramIcon, WhatsAppIcon } from "./BrandIcons.jsx";
 import Wordmark from "./Wordmark.jsx";
 import "./Footer.css";
 
-/** "212600000000" -> "+212 600 000 000" for display only */
-const displayNumber = (n) => {
-  const d = String(n).replace(/\D/g, "");
-  return `+${d.slice(0, 3)} ${d.slice(3).replace(/(\d{3})(?=\d)/g, "$1 ")}`;
-};
-
 export default function Footer() {
+  const { settings } = useCatalog();
   const year = new Date().getFullYear();
   return (
     <footer id="contact" className="footer">
@@ -23,10 +19,10 @@ export default function Footer() {
               WhatsApp.
             </p>
             <div className="footer__social">
-              <a href={generalEnquiryUrl()} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+              <a href={generalEnquiryUrl(settings)} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
                 <WhatsAppIcon size={18} />
               </a>
-              <a href={STORE_CONFIG.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <a href={settings.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                 <InstagramIcon size={18} />
               </a>
             </div>
@@ -65,13 +61,13 @@ export default function Footer() {
             <h2>Contact</h2>
             <ul>
               <li>
-                <a href={generalEnquiryUrl()} target="_blank" rel="noopener noreferrer">
-                  WhatsApp {displayNumber(STORE_CONFIG.whatsappNumber)}
+                <a href={generalEnquiryUrl(settings)} target="_blank" rel="noopener noreferrer">
+                  WhatsApp {displayNumber(settings.whatsappNumber)}
                 </a>
               </li>
               <li>
-                <a href={STORE_CONFIG.instagramUrl} target="_blank" rel="noopener noreferrer">
-                  Instagram {STORE_CONFIG.instagramHandle}
+                <a href={settings.instagramUrl} target="_blank" rel="noopener noreferrer">
+                  Instagram {settings.instagramHandle}
                 </a>
               </li>
             </ul>

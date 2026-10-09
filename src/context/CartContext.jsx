@@ -9,7 +9,8 @@ import {
   useState,
 } from "react";
 import { STORE_CONFIG } from "../config/store.js";
-import { getProduct } from "../data/products.js";
+import { isListed } from "../../shared/catalog.js";
+import { useCatalog } from "./CatalogContext.jsx";
 
 const STORAGE_KEY = "storefront-cart-v1";
 const MAX_QTY = STORE_CONFIG.maxQuantityPerItem;
@@ -25,7 +26,7 @@ const clampQty = (n) => Math.min(MAX_QTY, Math.max(1, Math.floor(n)));
 
 /** Checks that a product/variant/quantity combination can be added. */
 export function validateSelection(product, variant = {}, quantity = 1) {
-  if (!product) return { ok: false, error: "This product could not be found." };
+  if (!product || !isListed(product)) return { ok: false, error: "This piece is no longer available." };
   if (product.availability === "sold_out")
     return { ok: false, error: "This piece is currently sold out." };
   if (!Number.isInteger(quantity) || quantity < 1 || quantity > MAX_QTY)
@@ -41,7 +42,7 @@ export function validateSelection(product, variant = {}, quantity = 1) {
 }
 
 /** Restores the saved cart, dropping anything invalid or no longer in the catalog. */
-function loadCart() {
+function loadCart(getProduct) {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     const parsed = raw ? JSON.parse(raw) : [];
@@ -107,7 +108,8 @@ function reducer(state, action) {
 /* ---------- provider ---------- */
 
 export function CartProvider({ children }) {
-  const [items, dispatch] = useReducer(reducer, undefined, loadCart);
+  const { findProduct: getProduct } = useCatalog();
+  const [items, dispatch] = useReducer(reducer, getProduct, loadCart);
   const [isOpen, setIsOpen] = useState(false);
   const [toast, setToast] = useState(null);
   const [checkoutStarted, setCheckoutStarted] = useState(false);
@@ -121,11 +123,11 @@ export function CartProvider({ children }) {
   // Keep several open tabs in sync
   useEffect(() => {
     const onStorage = (e) => {
-      if (e.key === STORAGE_KEY) dispatch({ type: "replace", items: loadCart() });
+      if (e.key === STORAGE_KEY) dispatch({ type: "replace", items: loadCart(getProduct) });
     };
     window.addEventListener("storage", onStorage);
     return () => window.removeEventListener("storage", onStorage);
-  }, []);
+  }, [getProduct]);
 
   const showToast = useCallback((message, withCartAction = false) => {
     window.clearTimeout(toastTimer.current);
@@ -161,7 +163,7 @@ export function CartProvider({ children }) {
       );
       return { ok: true };
     },
-    [showToast]
+    [showToast, getProduct]
   );
 
   const setQuantity = useCallback((key, quantity) => {
@@ -191,12 +193,12 @@ export function CartProvider({ children }) {
           return {
             ...it,
             product,
-            unavailable: product.availability === "sold_out",
+            unavailable: !isListed(product) || product.availability === "sold_out",
             lineTotal: product.price * it.quantity,
           };
         })
         .filter(Boolean),
-    [items]
+    [items, getProduct]
   );
 
   const count = lines.reduce((n, l) => n + l.quantity, 0);

@@ -1,14 +1,8 @@
 import { useMemo, useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { CATEGORIES, PRODUCTS } from "../data/products.js";
+import { useCatalog } from "../context/CatalogContext.jsx";
 import ProductCard from "./ProductCard.jsx";
 import "./ProductGrid.css";
-
-const FILTERS = [
-  { id: "all", label: "All" },
-  ...CATEGORIES,
-  { id: "bestseller", label: "Best Sellers" },
-];
 
 const SORTS = {
   featured: { label: "Featured", fn: null },
@@ -17,21 +11,28 @@ const SORTS = {
 };
 
 export default function ProductGrid({ filter, setFilter, onView }) {
+  const { products: allProducts, collections, productsIn } = useCatalog();
   const [sort, setSort] = useState("featured");
 
+  // Filters = "All" + every collection currently shown on the store
+  const filters = useMemo(
+    () => [{ id: "all", label: "All" }, ...collections.map((c) => ({ id: c.id, label: c.name }))],
+    [collections]
+  );
+  const activeCollection = collections.find((c) => c.id === filter);
+  const activeFilter = activeCollection ? filter : "all";
+
   const products = useMemo(() => {
-    let list = PRODUCTS;
-    if (filter === "bestseller") list = list.filter((p) => p.badge === "bestseller");
-    else if (filter !== "all") list = list.filter((p) => p.category === filter);
+    const list = activeCollection ? productsIn(activeCollection) : allProducts;
     // Sold-out pieces always sink to the end
     const sorter = SORTS[sort].fn;
     return [...list].sort((a, b) => {
       const so = (a.availability === "sold_out") - (b.availability === "sold_out");
       return so || (sorter ? sorter(a, b) : 0);
     });
-  }, [filter, sort]);
+  }, [activeCollection, allProducts, productsIn, sort]);
 
-  const activeLabel = FILTERS.find((f) => f.id === filter)?.label ?? "All";
+  const activeLabel = activeCollection?.name ?? "All";
 
   return (
     <section id="shop" className="section shop" aria-labelledby="shop-title">
@@ -48,12 +49,12 @@ export default function ProductGrid({ filter, setFilter, onView }) {
 
         <div className="shop__toolbar">
           <div className="shop__filters" role="group" aria-label="Filter by category">
-            {FILTERS.map((f) => (
+            {filters.map((f) => (
               <button
                 key={f.id}
                 type="button"
-                className={`chip ${filter === f.id ? "is-active" : ""}`}
-                aria-pressed={filter === f.id}
+                className={`chip ${activeFilter === f.id ? "is-active" : ""}`}
+                aria-pressed={activeFilter === f.id}
                 onClick={() => setFilter(f.id)}
               >
                 {f.label}
@@ -80,7 +81,7 @@ export default function ProductGrid({ filter, setFilter, onView }) {
         </div>
 
         {products.length ? (
-          <div className="product-grid" key={filter}>
+          <div className="product-grid" key={activeFilter}>
             {products.map((p) => (
               <ProductCard key={p.id} product={p} onView={onView} />
             ))}

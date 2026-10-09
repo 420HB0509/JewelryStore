@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import { CartProvider, useCart } from "./context/CartContext.jsx";
+import { CatalogProvider } from "./context/CatalogContext.jsx";
 import { useReveal } from "./hooks/useReveal.js";
 import AnnouncementBar from "./components/AnnouncementBar.jsx";
 import Header from "./components/Header.jsx";
@@ -54,7 +55,7 @@ function Storefront() {
         <CollectionGrid onSelect={showCollection} />
         <ProductGrid filter={filter} setFilter={setFilter} onView={viewProduct} />
         <BrandStory />
-        <BestSellers onView={viewProduct} onSeeAll={() => showCollection("bestseller")} />
+        <BestSellers onView={viewProduct} onSeeAll={showCollection} />
         <Testimonials />
         <InstagramGallery />
         <FAQ />
@@ -76,8 +77,10 @@ function Storefront() {
 
 export default function App() {
   return (
-    <CartProvider>
-      <Storefront />
-    </CartProvider>
+    <CatalogProvider>
+      <CartProvider>
+        <Storefront />
+      </CartProvider>
+    </CatalogProvider>
   );
 }

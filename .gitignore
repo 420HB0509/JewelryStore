@@ -3,3 +3,8 @@ dist
 .DS_Store
 *.log
 .claude/
+.env*.local
+.env
+.data/
+public/uploads/
+.vercel

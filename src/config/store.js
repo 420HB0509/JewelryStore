@@ -1,7 +1,9 @@
 /* =============================================================
-   STORE CONFIGURATION — edit this file to rebrand the storefront.
-   Everything a shop owner normally changes lives here (or in
-   src/data/products.js for the catalog).
+   STORE CONFIGURATION — brand, texts and starting values.
+
+   Products, collections, the WhatsApp number, Instagram, delivery
+   fees and announcements are managed in the control center (/admin).
+   The values below are only used until you publish from there.
    ============================================================= */
 
 export const STORE_CONFIG = {
@@ -27,6 +29,10 @@ export const STORE_CONFIG = {
   deliveryFee: null,
   // Orders at or above this subtotal get free delivery. Set to null to disable.
   freeDeliveryThreshold: 500,
+  // When products have their own delivery fees:
+  // "highest"  -> charge once per order, the highest fee in the bag
+  // "per_item" -> add each item's fee × quantity
+  deliveryMode: "highest",
 
   // Max units of a single item per order line
   maxQuantityPerItem: 10,
@@ -65,48 +71,49 @@ export const HERO = {
   detailImageAlt: "Close-up of delicate layered gold-tone chain necklaces",
 };
 
-/* Collections — `filter` must match a product category id in products.js,
-   or "bestseller" to show every product marked as a best seller. */
+/* Sample collections (manage them from the control center once published).
+   kind "category"    → products choose it as their collection
+   kind "bestsellers" → automatically lists products marked "Best seller" */
 export const COLLECTIONS = [
   {
     id: "necklaces",
     name: "Necklaces",
-    filter: "necklaces",
+    kind: "category",
     image: "https://images.unsplash.com/photo-1611652022419-a9419f74343d",
     alt: "Layered gold-tone necklaces worn on the neckline",
   },
   {
     id: "earrings",
     name: "Earrings",
-    filter: "earrings",
+    kind: "category",
     image: "https://images.unsplash.com/photo-1600721391776-b5cd0e0048f9",
     alt: "Close-up of a gold earring and fine necklace",
   },
   {
     id: "rings",
     name: "Rings",
-    filter: "rings",
+    kind: "category",
     image: "https://images.unsplash.com/photo-1631982690223-8aa4be0a2497",
     alt: "Gold-tone rings displayed in a cream jewelry box",
   },
   {
     id: "bracelets",
     name: "Bracelets",
-    filter: "bracelets",
+    kind: "category",
     image: "https://images.unsplash.com/photo-1611107683227-e9060eccd846",
     alt: "A stack of gold-tone bangles and bracelets",
   },
   {
     id: "sets",
     name: "Jewelry Sets",
-    filter: "sets",
+    kind: "category",
     image: "https://images.unsplash.com/photo-1603974372039-adc49044b6bd",
     alt: "Gold-tone jewelry pieces arranged in a jewelry box",
   },
   {
     id: "bestsellers",
     name: "Best Sellers",
-    filter: "bestseller",
+    kind: "bestsellers",
     image: "https://images.unsplash.com/photo-1596944924616-7b38e7cfac36",
     alt: "Hands wearing gold-tone rings and a bracelet",
   },

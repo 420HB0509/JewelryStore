@@ -3,11 +3,11 @@ import { formatPrice, fill } from "./format.js";
 import { getOrderSummary } from "./pricing.js";
 
 /** Keep only digits so "+212 6 00-00-00-00" still produces a valid link. */
-const cleanNumber = (n) => String(n).replace(/\D/g, "");
+const cleanNumber = (n) => String(n || "").replace(/\D/g, "");
 
 /** https://wa.me/<number>?text=<encoded message> */
-export function buildWhatsAppUrl(message) {
-  const base = `https://wa.me/${cleanNumber(STORE_CONFIG.whatsappNumber)}`;
+export function buildWhatsAppUrl(settings, message) {
+  const base = `https://wa.me/${cleanNumber(settings.whatsappNumber)}`;
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }
 
@@ -22,9 +22,8 @@ export function describeVariant(variant) {
  * Builds the order message from resolved cart lines
  * ({ product, quantity, variant, lineTotal }).
  */
-export function buildOrderMessage(lines) {
-  const subtotal = lines.reduce((sum, l) => sum + l.lineTotal, 0);
-  const summary = getOrderSummary(subtotal);
+export function buildOrderMessage(lines, settings) {
+  const summary = getOrderSummary(lines, settings);
 
   const items = lines.map((l) => {
     const variant = describeVariant(l.variant);
@@ -60,10 +59,17 @@ export function buildOrderMessage(lines) {
   ].join("\n");
 }
 
-export const generalEnquiryUrl = () =>
-  buildWhatsAppUrl(fill(T.generalEnquiry, { brand: STORE_CONFIG.name }));
+export const generalEnquiryUrl = (settings) =>
+  buildWhatsAppUrl(settings, fill(T.generalEnquiry, { brand: STORE_CONFIG.name }));
 
-export const productEnquiryUrl = (product) =>
+export const productEnquiryUrl = (product, settings) =>
   buildWhatsAppUrl(
+    settings,
     fill(T.productEnquiry, { brand: STORE_CONFIG.name, product: product.name, id: product.id })
   );
+
+/** "212600000000" -> "+212 600 000 000" for display only */
+export function displayNumber(n) {
+  const d = cleanNumber(n);
+  return d ? `+${d.slice(0, 3)} ${d.slice(3).replace(/(\d{3})(?=\d)/g, "$1 ")}` : "";
+}

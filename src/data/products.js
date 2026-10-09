@@ -1,33 +1,23 @@
 /* =============================================================
-   PRODUCT CATALOG
+   SAMPLE PRODUCT CATALOG
    -------------------------------------------------------------
-   Add, edit or remove products here. Fields:
+   These products are shown until you publish your own catalog from
+   the control center (/admin). After that, manage products there —
+   this file is only the starting point / fallback.
 
    id            Unique reference (shown to you in WhatsApp orders)
    name          Product name
    price         Price in the store currency (number)
    originalPrice Optional. Higher "was" price to show a discount
-   category      One of the ids in CATEGORIES below
-   images        Array of image URLs (first one is the main image).
-                 Use full URLs or files in /public, e.g. "/images/ring.jpg"
+   category      Id of a collection in COLLECTIONS (src/config/store.js)
+   images        Array of image URLs (first one is the main image)
    description   Short description
    material      Accurate material description — never claim solid gold
-   details       Optional extra bullet points (only TRUE, verified facts:
-                 don't add "hypoallergenic", "waterproof" or
-                 "tarnish-free" unless you have confirmed it)
+   details       Optional extra bullet points (only TRUE, verified facts)
    variants      Optional { colors: [{ name, hex }], sizes: [...] }
-                 Customers must pick a size when sizes are listed.
    badge         Optional "bestseller" | "new"
    availability  "in_stock" | "low_stock" | "sold_out"
    ============================================================= */
-
-export const CATEGORIES = [
-  { id: "necklaces", label: "Necklaces" },
-  { id: "earrings", label: "Earrings" },
-  { id: "rings", label: "Rings" },
-  { id: "bracelets", label: "Bracelets" },
-  { id: "sets", label: "Jewelry Sets" },
-];
 
 const u = (id) => `https://images.unsplash.com/photo-${id}`;
 
@@ -230,5 +220,3 @@ export const PRODUCTS = [
     availability: "low_stock",
   },
 ];
-
-export const getProduct = (id) => PRODUCTS.find((p) => p.id === id);

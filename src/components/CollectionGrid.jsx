@@ -1,15 +1,13 @@
 import { ArrowUpRight } from "lucide-react";
-import { COLLECTIONS } from "../config/store.js";
-import { PRODUCTS } from "../data/products.js";
+import { useCatalog } from "../context/CatalogContext.jsx";
 import { imgSrc, imgSrcSet } from "../utils/image.js";
 import "./CollectionGrid.css";
 
-const countFor = (filter) =>
-  filter === "bestseller"
-    ? PRODUCTS.filter((p) => p.badge === "bestseller").length
-    : PRODUCTS.filter((p) => p.category === filter).length;
-
 export default function CollectionGrid({ onSelect }) {
+  // Only collections that are turned on and have an available piece
+  const { collections, productsIn } = useCatalog();
+  if (!collections.length) return null;
+
   return (
     <section id="collections" className="section collections" aria-labelledby="collections-title">
       <div className="container">
@@ -21,22 +19,25 @@ export default function CollectionGrid({ onSelect }) {
         </div>
 
         <ul className="collections__grid">
-          {COLLECTIONS.map((c, i) => {
-            const n = countFor(c.filter);
+          {collections.map((c, i) => {
+            const n = productsIn(c).length;
+            const image = c.image || productsIn(c)[0]?.images[0];
             return (
               <li key={c.id} className="reveal" style={{ transitionDelay: `${(i % 3) * 80}ms` }}>
-                <button type="button" className="collection-card" onClick={() => onSelect(c.filter)}>
+                <button type="button" className="collection-card" onClick={() => onSelect(c.id)}>
                   <span className="collection-card__media">
-                    <img
-                      src={imgSrc(c.image, 700)}
-                      srcSet={imgSrcSet(c.image, [400, 700, 1000])}
-                      sizes="(min-width: 900px) 30vw, 50vw"
-                      alt={c.alt}
-                      width="700"
-                      height="875"
-                      loading="lazy"
-                      decoding="async"
-                    />
+                    {image && (
+                      <img
+                        src={imgSrc(image, 700)}
+                        srcSet={imgSrcSet(image, [400, 700, 1000])}
+                        sizes="(min-width: 900px) 30vw, 50vw"
+                        alt={c.alt || c.name}
+                        width="700"
+                        height="875"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    )}
                   </span>
                   <span className="collection-card__label">
                     <span className="collection-card__name">{c.name}</span>

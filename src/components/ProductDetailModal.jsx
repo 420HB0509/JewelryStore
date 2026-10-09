@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Check, X } from "lucide-react";
-import { CATEGORIES } from "../data/products.js";
+import { Check, Truck, X } from "lucide-react";
+import { useCatalog } from "../context/CatalogContext.jsx";
 import { useCart, validateSelection } from "../context/CartContext.jsx";
 import { useDialog } from "../hooks/useDialog.js";
 import { discountPercent } from "../utils/format.js";
 import { imgSrc, imgSrcSet } from "../utils/image.js";
+import { productDeliveryNote } from "../utils/pricing.js";
 import { productEnquiryUrl } from "../utils/whatsapp.js";
 import { WhatsAppIcon } from "./BrandIcons.jsx";
 import Price from "./Price.jsx";
@@ -43,6 +44,7 @@ export default function ProductDetailModal({ product, isOpen, openId, onClose })
 
 function ModalBody({ product, onClose }) {
   const { addItem, openCart, maxQty } = useCart();
+  const { settings, allCollections } = useCatalog();
   const colors = product.variants?.colors ?? [];
   const sizes = product.variants?.sizes ?? [];
 
@@ -56,7 +58,7 @@ function ModalBody({ product, onClose }) {
   const soldOut = product.availability === "sold_out";
   const availability = AVAILABILITY[product.availability] ?? AVAILABILITY.in_stock;
   const discount = discountPercent(product.price, product.originalPrice);
-  const category = CATEGORIES.find((c) => c.id === product.category)?.label;
+  const category = allCollections.find((c) => c.id === product.category)?.name;
   const variant = { color, size };
 
   const handleAdd = () => {
@@ -127,6 +129,10 @@ function ModalBody({ product, onClose }) {
         </div>
         <p className={`pdm__stock pdm__stock--${availability.tone}`}>
           <span className="pdm__dot" aria-hidden="true" /> {availability.label}
+        </p>
+
+        <p className="pdm__delivery">
+          <Truck size={16} strokeWidth={1.4} aria-hidden="true" /> {productDeliveryNote(product, settings)}
         </p>
 
         <p className="pdm__desc">{product.description}</p>
@@ -233,7 +239,7 @@ function ModalBody({ product, onClose }) {
           </button>
         )}
 
-        <a className="pdm__ask" href={productEnquiryUrl(product)} target="_blank" rel="noopener noreferrer">
+        <a className="pdm__ask" href={productEnquiryUrl(product, settings)} target="_blank" rel="noopener noreferrer">
           <WhatsAppIcon size={17} /> Questions about this piece? Ask us on WhatsApp
         </a>
       </div>

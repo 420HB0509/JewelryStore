@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { FAQS } from "../config/store.js";
+import { useCatalog } from "../context/CatalogContext.jsx";
 import { generalEnquiryUrl } from "../utils/whatsapp.js";
 import { WhatsAppIcon } from "./BrandIcons.jsx";
 import "./FAQ.css";
 
 export default function FAQ() {
+  const { settings } = useCatalog();
   const [open, setOpen] = useState(0);
 
   return (
@@ -19,7 +21,7 @@ export default function FAQ() {
           <p className="section-lead">
             Can't find your answer? We reply personally on WhatsApp.
           </p>
-          <a className="btn btn--wa faq__cta" href={generalEnquiryUrl()} target="_blank" rel="noopener noreferrer">
+          <a className="btn btn--wa faq__cta" href={generalEnquiryUrl(settings)} target="_blank" rel="noopener noreferrer">
             <WhatsAppIcon size={18} /> Ask a question
           </a>
         </div>

@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 
 let lockCount = 0;
+// Open dialogs, newest last: only the topmost one reacts to keys
+const stack = [];
 
 /**
  * Shared behaviour for modal surfaces (drawers, dialogs, menus):
@@ -16,6 +18,8 @@ export function useDialog(isOpen, onClose) {
   useEffect(() => {
     if (!isOpen) return;
     const previouslyFocused = document.activeElement;
+    const token = {};
+    stack.push(token);
 
     lockCount += 1;
     document.body.classList.add("no-scroll");
@@ -34,6 +38,7 @@ export function useDialog(isOpen, onClose) {
     });
 
     const onKey = (e) => {
+      if (stack[stack.length - 1] !== token) return;
       if (e.key === "Escape") {
         e.stopPropagation();
         onCloseRef.current?.();
@@ -57,6 +62,7 @@ export function useDialog(isOpen, onClose) {
     return () => {
       cancelAnimationFrame(raf);
       document.removeEventListener("keydown", onKey);
+      stack.splice(stack.indexOf(token), 1);
       lockCount -= 1;
       if (lockCount <= 0) {
         lockCount = 0;

@@ -366,3 +366,25 @@ p {
     transform: none;
   }
 }
+
+/* ============ Initial catalog loading ============ */
+.catalog-loading {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.catalog-loading__line {
+  width: 64px;
+  height: 1px;
+  background: var(--champagne);
+  animation: loading-line 1.2s var(--ease) infinite alternate;
+}
+
+@keyframes loading-line {
+  from { transform: scaleX(0.2); opacity: 0.4; }
+  to { transform: scaleX(1); opacity: 1; }
+}

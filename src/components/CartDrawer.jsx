@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ShoppingBag, Trash2, X } from "lucide-react";
-import { STORE_CONFIG } from "../config/store.js";
+import { useCatalog } from "../context/CatalogContext.jsx";
 import { useCart } from "../context/CartContext.jsx";
 import { useDialog } from "../hooks/useDialog.js";
 import { formatPrice } from "../utils/format.js";
@@ -24,12 +24,13 @@ export default function CartDrawer() {
     closeCart,
     checkoutStarted,
   } = useCart();
+  const { settings } = useCatalog();
   const ref = useDialog(isOpen, closeCart);
   const [confirmClear, setConfirmClear] = useState(false);
 
-  const summary = getOrderSummary(subtotal);
-  const remaining = remainingForFreeDelivery(subtotal);
-  const threshold = STORE_CONFIG.freeDeliveryThreshold;
+  const summary = getOrderSummary(lines, settings);
+  const remaining = remainingForFreeDelivery(subtotal, settings);
+  const threshold = settings.freeDeliveryThreshold;
   const empty = lines.length === 0;
 
   const continueShopping = () => {
@@ -117,7 +118,7 @@ export default function CartDrawer() {
                         </button>
                       </div>
                       {l.unavailable ? (
-                        <p className="citem__warn">This piece is now sold out — please remove it.</p>
+                        <p className="citem__warn">This piece is no longer available — please remove it.</p>
                       ) : (
                         <div className="citem__bottom">
                           <QuantityStepper

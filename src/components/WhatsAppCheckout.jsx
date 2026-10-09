@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useCart } from "../context/CartContext.jsx";
+import { useCatalog } from "../context/CatalogContext.jsx";
 import { buildOrderMessage, buildWhatsAppUrl } from "../utils/whatsapp.js";
 import { WhatsAppIcon } from "./BrandIcons.jsx";
 
@@ -10,13 +11,14 @@ import { WhatsAppIcon } from "./BrandIcons.jsx";
  */
 export default function WhatsAppCheckout() {
   const { lines, setCheckoutStarted } = useCart();
+  const { settings } = useCatalog();
 
   const hasUnavailable = lines.some((l) => l.unavailable);
   const canCheckout = lines.length > 0 && !hasUnavailable;
 
   const href = useMemo(
-    () => (canCheckout ? buildWhatsAppUrl(buildOrderMessage(lines)) : undefined),
-    [lines, canCheckout]
+    () => (canCheckout ? buildWhatsAppUrl(settings, buildOrderMessage(lines, settings)) : undefined),
+    [lines, canCheckout, settings]
   );
 
   if (!canCheckout) {
@@ -27,7 +29,7 @@ export default function WhatsAppCheckout() {
         </button>
         {hasUnavailable && (
           <p className="checkout__warn" role="alert">
-            Please remove sold-out pieces before ordering.
+            Please remove unavailable pieces before ordering.
           </p>
         )}
       </>

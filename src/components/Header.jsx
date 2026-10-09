@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Menu, ShoppingBag, X } from "lucide-react";
 import { NAV_LINKS, STORE_CONFIG } from "../config/store.js";
 import { useCart } from "../context/CartContext.jsx";
+import { useCatalog } from "../context/CatalogContext.jsx";
 import { useDialog } from "../hooks/useDialog.js";
 import { generalEnquiryUrl } from "../utils/whatsapp.js";
 import { InstagramIcon, WhatsAppIcon } from "./BrandIcons.jsx";
@@ -10,6 +11,7 @@ import "./Header.css";
 
 export default function Header({ menuOpen, setMenuOpen }) {
   const { count, openCart } = useCart();
+  const { settings } = useCatalog();
   const [scrolled, setScrolled] = useState(false);
   const menuRef = useDialog(menuOpen, () => setMenuOpen(false));
 
@@ -50,7 +52,7 @@ export default function Header({ menuOpen, setMenuOpen }) {
           <div className="header__right">
             <a
               className="icon-btn header__social"
-              href={STORE_CONFIG.instagramUrl}
+              href={settings.instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram (opens in a new tab)"
@@ -105,11 +107,11 @@ export default function Header({ menuOpen, setMenuOpen }) {
             ))}
           </nav>
           <div className="mmenu__foot">
-            <a className="btn btn--wa btn--block" href={generalEnquiryUrl()} target="_blank" rel="noopener noreferrer">
+            <a className="btn btn--wa btn--block" href={generalEnquiryUrl(settings)} target="_blank" rel="noopener noreferrer">
               <WhatsAppIcon size={18} /> Chat on WhatsApp
             </a>
-            <a className="mmenu__ig" href={STORE_CONFIG.instagramUrl} target="_blank" rel="noopener noreferrer">
-              <InstagramIcon size={18} /> {STORE_CONFIG.instagramHandle}
+            <a className="mmenu__ig" href={settings.instagramUrl} target="_blank" rel="noopener noreferrer">
+              <InstagramIcon size={18} /> {settings.instagramHandle}
             </a>
           </div>
         </div>
