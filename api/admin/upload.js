@@ -22,7 +22,7 @@ export async function POST(request) {
     if (buffer.length > MAX_BYTES) return fail(413, "This photo is too large (max 4 MB).");
 
     const name = new URL(request.url).searchParams.get("name") || "photo";
-    const url = await saveImage(buffer, contentType, name);
+    const url = await saveImage(buffer, contentType, name, request.headers.get("x-vercel-oidc-token"));
     return json({ url });
   } catch (err) {
     if (err instanceof SetupError) return fail(503, err.message, { code: err.code });

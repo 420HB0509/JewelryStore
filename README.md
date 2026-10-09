@@ -16,8 +16,8 @@ You manage products, collections and delivery from the **Control Center** at `/a
 
 1. **Admin password:** in your Vercel project, go to **Settings → Environment Variables** and add
    `ADMIN_PASSWORD` with a strong password (at least 8 characters).
-2. **Database for the catalog:** go to **Storage → Create Database → Upstash for Redis** (free plan) and connect it to the project.
-   Keep the default environment variable prefix.
+2. **Database for the catalog:** go to **Storage → Create Database** and choose **Redis** or **Upstash for Redis** (free plans), then connect it to the project.
+   Keep the default environment variable prefix. Both `REDIS_URL` and Upstash's `KV_REST_API_*` variables work.
 3. **Photo storage:** go to **Storage → Create → Blob** and connect it to the project.
 4. **Redeploy:** open **Deployments**, choose the latest deployment, and click **Redeploy** so the new settings take effect.
 5. Open `https://your-site.vercel.app/admin/`, log in, and click **Publish now**.
