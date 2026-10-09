@@ -63,8 +63,8 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), devApi()],
-    // Relative asset paths so the build works on any static host
-    base: "./",
+    // Absolute asset paths: pages like /collections/rings must load /assets/...
+    base: "/",
     build: {
       rollupOptions: {
         input: {

@@ -1,30 +1,51 @@
 import { ArrowUpRight } from "lucide-react";
 import { useCatalog } from "../context/CatalogContext.jsx";
+import { Link } from "../router.jsx";
 import { imgSrc, imgSrcSet } from "../utils/image.js";
 import "./CollectionGrid.css";
 
-export default function CollectionGrid({ onSelect }) {
-  // Only collections that are turned on and have an available piece
+export const collectionPath = (id) => `/collections/${encodeURIComponent(id)}`;
+
+/**
+ * Collection cards linking to each collection page.
+ * Only collections that are turned on and have an available piece are shown.
+ */
+export default function CollectionGrid({
+  id = "collections",
+  eyebrow = "Shop by Collection",
+  title = (
+    <>
+      Find your <em>signature</em> piece
+    </>
+  ),
+  excludeId,
+  compact = false,
+}) {
   const { collections, productsIn } = useCatalog();
-  if (!collections.length) return null;
+  const list = collections.filter((c) => c.id !== excludeId);
+  if (!list.length) return null;
 
   return (
-    <section id="collections" className="section collections" aria-labelledby="collections-title">
+    <section
+      id={id}
+      className={`section collections ${compact ? "collections--compact" : ""}`}
+      aria-labelledby={`${id}-title`}
+    >
       <div className="container">
         <div className="section-head reveal">
-          <span className="eyebrow">Shop by Collection</span>
-          <h2 id="collections-title" className="section-title">
-            Find your <em>signature</em> piece
+          <span className="eyebrow">{eyebrow}</span>
+          <h2 id={`${id}-title`} className="section-title">
+            {title}
           </h2>
         </div>
 
         <ul className="collections__grid">
-          {collections.map((c, i) => {
+          {list.map((c, i) => {
             const n = productsIn(c).length;
             const image = c.image || productsIn(c)[0]?.images[0];
             return (
               <li key={c.id} className="reveal" style={{ transitionDelay: `${(i % 3) * 80}ms` }}>
-                <button type="button" className="collection-card" onClick={() => onSelect(c.id)}>
+                <Link to={collectionPath(c.id)} className="collection-card">
                   <span className="collection-card__media">
                     {image && (
                       <img
@@ -46,7 +67,7 @@ export default function CollectionGrid({ onSelect }) {
                       <ArrowUpRight size={16} strokeWidth={1.4} aria-hidden="true" />
                     </span>
                   </span>
-                </button>
+                </Link>
               </li>
             );
           })}

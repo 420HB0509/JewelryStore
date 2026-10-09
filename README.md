@@ -31,10 +31,23 @@ If a step is missing, the control center tells you which one.
 | Tab | Actions |
 | --- | --- |
 | **Products** | Add, edit, duplicate or delete products. Upload photos from your phone (they're resized automatically). Change name, description, material, price and "before discount" price. Add sizes and colors, and a *New* or *Best seller* label. Use the **Visible** switch to show or hide a product, and the stock menu to mark it *In stock*, *Few left* or *Out of stock*. Set a **delivery fee per product** (store default, free, or its own fee). |
-| **Collections** | Create, rename, reorder, turn on or off, and delete collections, and set a cover photo. Each collection shows whether it's on the store and why. |
+| **Collections** | Create, rename, reorder, turn on or off, and delete collections, and set a cover photo and a short description. Each collection shows whether it's on the store and why, with a link to view its page. |
 | **Delivery & settings** | WhatsApp number (with a test link), standard delivery fee (fixed or "confirm on WhatsApp"), free-delivery threshold, how per-product fees combine, announcement bar messages, Instagram, and **backup download/restore**. |
 
 Changes appear on the store as soon as the page is reloaded.
+
+### Store pages
+
+| Address | Page |
+| --- | --- |
+| `/` | Home: hero, collections, featured pieces, story, best sellers, FAQ |
+| `/collections/all` | Every product |
+| `/collections/<id>` | One collection, e.g. `/collections/rings`. The id is created from the collection name. |
+
+Collection pages are generated automatically: there are no files per collection.
+Each page has a banner, quick links to the other collections, an availability filter (*All / In stock / Sold out*) and price sorting.
+The filter and sort are kept in the address (e.g. `/collections/rings?stock=in&sort=price-asc`), so a filtered page can be shared on WhatsApp or Instagram.
+`vercel.json` tells Vercel to serve the app for these addresses.
 
 ### How the store decides what to show
 

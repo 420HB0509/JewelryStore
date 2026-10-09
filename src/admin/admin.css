@@ -911,6 +911,10 @@ textarea.ainput {
 .crow__info .pill {
   margin-top: 4px;
 }
+.crow__view {
+  padding: 2px 0;
+  font-size: 12.5px;
+}
 .crow__delete {
   margin-left: auto;
   color: var(--a-muted);

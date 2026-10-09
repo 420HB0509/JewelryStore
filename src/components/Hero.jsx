@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { HERO } from "../config/store.js";
+import { Link } from "../router.jsx";
 import { imgSrc, imgSrcSet } from "../utils/image.js";
 import "./Hero.css";
 
@@ -51,12 +52,12 @@ export default function Hero() {
           </h1>
           <p className="hero__sub">{HERO.subheadline}</p>
           <div className="hero__ctas">
-            <a href={HERO.primaryCta.href} className="btn hero__cta-primary">
+            <Link to={HERO.primaryCta.href} className="btn hero__cta-primary">
               {HERO.primaryCta.label}
-            </a>
-            <a href={HERO.secondaryCta.href} className="link-underline hero__cta-secondary">
+            </Link>
+            <Link to={HERO.secondaryCta.href} className="link-underline hero__cta-secondary">
               {HERO.secondaryCta.label} <ArrowRight size={15} strokeWidth={1.5} />
-            </a>
+            </Link>
           </div>
         </div>
       </div>

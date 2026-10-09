@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Check, Truck, X } from "lucide-react";
 import { useCatalog } from "../context/CatalogContext.jsx";
+import { Link } from "../router.jsx";
+import { collectionPath } from "./CollectionGrid.jsx";
 import { useCart, validateSelection } from "../context/CartContext.jsx";
 import { useDialog } from "../hooks/useDialog.js";
 import { discountPercent } from "../utils/format.js";
@@ -44,7 +46,7 @@ export default function ProductDetailModal({ product, isOpen, openId, onClose })
 
 function ModalBody({ product, onClose }) {
   const { addItem, openCart, maxQty } = useCart();
-  const { settings, allCollections } = useCatalog();
+  const { settings, allCollections, collections } = useCatalog();
   const colors = product.variants?.colors ?? [];
   const sizes = product.variants?.sizes ?? [];
 
@@ -59,6 +61,7 @@ function ModalBody({ product, onClose }) {
   const availability = AVAILABILITY[product.availability] ?? AVAILABILITY.in_stock;
   const discount = discountPercent(product.price, product.originalPrice);
   const category = allCollections.find((c) => c.id === product.category)?.name;
+  const categoryOnStore = collections.some((c) => c.id === product.category);
   const variant = { color, size };
 
   const handleAdd = () => {
@@ -119,7 +122,14 @@ function ModalBody({ product, onClose }) {
       </div>
 
       <div className="pdm__info">
-        {category && <span className="eyebrow">{category}</span>}
+        {category &&
+          (categoryOnStore ? (
+            <Link to={collectionPath(product.category)} className="eyebrow pdm__collection" onClick={onClose}>
+              {category}
+            </Link>
+          ) : (
+            <span className="eyebrow">{category}</span>
+          ))}
         <h2 id="pdm-title" className="pdm__title">
           {product.name}
         </h2>

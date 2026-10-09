@@ -48,10 +48,10 @@ export const ANNOUNCEMENTS = [
 
 /* Navigation */
 export const NAV_LINKS = [
-  { label: "Home", href: "#top" },
-  { label: "Shop", href: "#shop" },
-  { label: "Collections", href: "#collections" },
-  { label: "About", href: "#about" },
+  { label: "Home", href: "/" },
+  { label: "Shop", href: "/collections/all" },
+  { label: "Collections", href: "/#collections" },
+  { label: "About", href: "/#about" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -61,7 +61,7 @@ export const HERO = {
   headline: "The Little Details That Make You Shine",
   subheadline:
     "Discover elegant, everyday jewelry designed to elevate your style without the luxury price tag.",
-  primaryCta: { label: "Shop the Collection", href: "#shop" },
+  primaryCta: { label: "Shop the Collection", href: "/collections/all" },
   secondaryCta: { label: "Discover Our Story", href: "#about" },
   image:
     "https://images.unsplash.com/photo-1601821765780-754fa98637c1",
@@ -78,6 +78,7 @@ export const COLLECTIONS = [
   {
     id: "necklaces",
     name: "Necklaces",
+    description: "Fine chains, pendants and pearls to wear alone or layered.",
     kind: "category",
     image: "https://images.unsplash.com/photo-1611652022419-a9419f74343d",
     alt: "Layered gold-tone necklaces worn on the neckline",
@@ -85,6 +86,7 @@ export const COLLECTIONS = [
   {
     id: "earrings",
     name: "Earrings",
+    description: "Hoops, studs and pearl details for every day and every occasion.",
     kind: "category",
     image: "https://images.unsplash.com/photo-1600721391776-b5cd0e0048f9",
     alt: "Close-up of a gold earring and fine necklace",
@@ -92,6 +94,7 @@ export const COLLECTIONS = [
   {
     id: "rings",
     name: "Rings",
+    description: "Slim bands and statement stones, made for stacking.",
     kind: "category",
     image: "https://images.unsplash.com/photo-1631982690223-8aa4be0a2497",
     alt: "Gold-tone rings displayed in a cream jewelry box",
@@ -99,6 +102,7 @@ export const COLLECTIONS = [
   {
     id: "bracelets",
     name: "Bracelets",
+    description: "Delicate chains and links that add warmth to the wrist.",
     kind: "category",
     image: "https://images.unsplash.com/photo-1611107683227-e9060eccd846",
     alt: "A stack of gold-tone bangles and bracelets",
@@ -106,6 +110,7 @@ export const COLLECTIONS = [
   {
     id: "sets",
     name: "Jewelry Sets",
+    description: "Coordinated pieces, ready to gift — or to keep.",
     kind: "category",
     image: "https://images.unsplash.com/photo-1603974372039-adc49044b6bd",
     alt: "Gold-tone jewelry pieces arranged in a jewelry box",
@@ -113,6 +118,7 @@ export const COLLECTIONS = [
   {
     id: "bestsellers",
     name: "Best Sellers",
+    description: "The pieces our customers love most.",
     kind: "bestsellers",
     image: "https://images.unsplash.com/photo-1596944924616-7b38e7cfac36",
     alt: "Hands wearing gold-tone rings and a bracelet",

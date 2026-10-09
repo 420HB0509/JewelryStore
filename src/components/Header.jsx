@@ -6,6 +6,7 @@ import { useCatalog } from "../context/CatalogContext.jsx";
 import { useDialog } from "../hooks/useDialog.js";
 import { generalEnquiryUrl } from "../utils/whatsapp.js";
 import { InstagramIcon, WhatsAppIcon } from "./BrandIcons.jsx";
+import { Link } from "../router.jsx";
 import Wordmark from "./Wordmark.jsx";
 import "./Header.css";
 
@@ -38,16 +39,16 @@ export default function Header({ menuOpen, setMenuOpen }) {
             </button>
             <nav className="header__nav" aria-label="Main">
               {NAV_LINKS.map((l) => (
-                <a key={l.href} href={l.href} className="header__link">
+                <Link key={l.href} to={l.href} className="header__link">
                   {l.label}
-                </a>
+                </Link>
               ))}
             </nav>
           </div>
 
-          <a href="#top" className="header__brand" aria-label={`${STORE_CONFIG.name} — home`}>
+          <Link to="/" className="header__brand" aria-label={`${STORE_CONFIG.name} — home`}>
             <Wordmark />
-          </a>
+          </Link>
 
           <div className="header__right">
             <a
@@ -95,15 +96,15 @@ export default function Header({ menuOpen, setMenuOpen }) {
           </div>
           <nav className="mmenu__nav" aria-label="Mobile">
             {NAV_LINKS.map((l, i) => (
-              <a
+              <Link
                 key={l.href}
-                href={l.href}
+                to={l.href}
                 className="mmenu__link"
                 style={{ transitionDelay: menuOpen ? `${120 + i * 50}ms` : "0ms" }}
                 onClick={() => setMenuOpen(false)}
               >
                 {l.label}
-              </a>
+              </Link>
             ))}
           </nav>
           <div className="mmenu__foot">

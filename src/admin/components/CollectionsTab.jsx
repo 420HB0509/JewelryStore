@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowDown, ArrowUp, ImageOff, Info, Pencil, Plus, Sparkles, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, ExternalLink, ImageOff, Info, Pencil, Plus, Sparkles, Trash2 } from "lucide-react";
 import { isAvailable, productsInCollection, uniqueCollectionId } from "../../../shared/catalog.js";
 import { imgSrc } from "../../utils/image.js";
 import ImageManager from "./ImageManager.jsx";
@@ -119,6 +119,11 @@ export default function CollectionsTab({ catalog, commit, uploadsMode }) {
                   {status.total} {status.total === 1 ? "product" : "products"} · {status.available} available
                 </p>
                 <Pill tone={status.tone}>{status.label}</Pill>
+                {status.tone === "ok" && (
+                  <a className="alink crow__view" href={`/collections/${encodeURIComponent(c.id)}`} target="_blank" rel="noopener">
+                    <ExternalLink size={13} /> View page
+                  </a>
+                )}
               </div>
               <div className="crow__controls">
                 <div className="prow__visible">
@@ -209,6 +214,7 @@ const otherCategoriesFor = (collections, c) => collections.filter((x) => x.kind 
 function CollectionEditor({ collection, catalog, commit, uploadsMode, onClose }) {
   const isNew = !collection;
   const [name, setName] = useState(collection?.name || "");
+  const [description, setDescription] = useState(collection?.description || "");
   const [images, setImages] = useState(collection?.image ? [collection.image] : []);
   const [alt, setAlt] = useState(collection?.alt || "");
   const [active, setActive] = useState(collection?.active ?? true);
@@ -220,7 +226,7 @@ function CollectionEditor({ collection, catalog, commit, uploadsMode, onClose })
       setError("Give the collection a name.");
       return;
     }
-    const data = { name: name.trim(), image: images[0] || "", alt: alt.trim(), active };
+    const data = { name: name.trim(), description: description.trim(), image: images[0] || "", alt: alt.trim(), active };
     setSaving(true);
     const ok = await commit((cat) => {
       if (isNew) {
@@ -270,6 +276,22 @@ function CollectionEditor({ collection, catalog, commit, uploadsMode, onClose })
               }}
               placeholder="e.g. Anklets"
               maxLength={60}
+            />
+          </Field>
+          <Field
+            label="Description"
+            htmlFor="ce-desc"
+            optional
+            hint="One or two sentences shown at the top of the collection page."
+          >
+            <textarea
+              id="ce-desc"
+              className="ainput"
+              rows={3}
+              maxLength={400}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="e.g. Delicate chains to wear at the ankle all summer long."
             />
           </Field>
           <Switch checked={active} onChange={setActive} label="Turned on" showLabel />

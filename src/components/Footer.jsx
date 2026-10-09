@@ -2,6 +2,7 @@ import { NAV_LINKS, STORE_CONFIG } from "../config/store.js";
 import { useCatalog } from "../context/CatalogContext.jsx";
 import { displayNumber, generalEnquiryUrl } from "../utils/whatsapp.js";
 import { InstagramIcon, WhatsAppIcon } from "./BrandIcons.jsx";
+import { Link } from "../router.jsx";
 import Wordmark from "./Wordmark.jsx";
 import "./Footer.css";
 
@@ -33,7 +34,7 @@ export default function Footer() {
             <ul>
               {NAV_LINKS.map((l) => (
                 <li key={l.href}>
-                  <a href={l.href}>{l.label}</a>
+                  <Link to={l.href}>{l.label}</Link>
                 </li>
               ))}
             </ul>
@@ -43,16 +44,16 @@ export default function Footer() {
             <h2>Help</h2>
             <ul>
               <li>
-                <a href="#faq">How to order</a>
+                <Link to="/#faq">How to order</Link>
               </li>
               <li>
-                <a href="#faq">Delivery</a>
+                <Link to="/#faq">Delivery</Link>
               </li>
               <li>
-                <a href="#faq">Exchanges &amp; returns</a>
+                <Link to="/#faq">Exchanges &amp; returns</Link>
               </li>
               <li>
-                <a href="#faq">FAQ</a>
+                <Link to="/#faq">FAQ</Link>
               </li>
             </ul>
           </div>

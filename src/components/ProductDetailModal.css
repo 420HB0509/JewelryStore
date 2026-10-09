@@ -128,6 +128,12 @@
 
 .pdm__info .eyebrow {
   margin-bottom: 8px;
+  align-self: flex-start;
+}
+
+.pdm__collection:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .pdm__title {

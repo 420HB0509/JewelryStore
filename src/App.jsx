@@ -1,26 +1,32 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CartProvider, useCart } from "./context/CartContext.jsx";
 import { CatalogProvider } from "./context/CatalogContext.jsx";
 import { useReveal } from "./hooks/useReveal.js";
+import { RouterProvider, useRouter } from "./router.jsx";
 import AnnouncementBar from "./components/AnnouncementBar.jsx";
 import Header from "./components/Header.jsx";
-import Hero from "./components/Hero.jsx";
-import CollectionGrid from "./components/CollectionGrid.jsx";
-import ProductGrid from "./components/ProductGrid.jsx";
-import BrandStory from "./components/BrandStory.jsx";
-import BestSellers from "./components/BestSellers.jsx";
-import Testimonials from "./components/Testimonials.jsx";
-import InstagramGallery from "./components/InstagramGallery.jsx";
-import FAQ from "./components/FAQ.jsx";
 import Footer from "./components/Footer.jsx";
 import ProductDetailModal from "./components/ProductDetailModal.jsx";
 import CartDrawer from "./components/CartDrawer.jsx";
 import FloatingWhatsApp from "./components/FloatingWhatsApp.jsx";
 import Toast from "./components/Toast.jsx";
+import HomePage from "./pages/HomePage.jsx";
+import CollectionPage from "./pages/CollectionPage.jsx";
+import NotFound from "./pages/NotFound.jsx";
+
+/** "/" → home, "/collections/<id>" → that collection, anything else → not found. */
+function matchRoute(path) {
+  const clean = path.replace(/\/+$/, "") || "/";
+  if (clean === "/" || clean === "/index.html") return { page: "home" };
+  const m = clean.match(/^\/collections\/([^/]+)$/);
+  if (m) return { page: "collection", id: decodeURIComponent(m[1]) };
+  if (clean === "/collections" || clean === "/shop") return { page: "collection", id: "all" };
+  return { page: "notfound" };
+}
 
 function Storefront() {
-  const { isOpen: cartOpen } = useCart();
-  const [filter, setFilter] = useState("all");
+  const { isOpen: cartOpen, closeCart } = useCart();
+  const { path } = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
 
   // The modal keeps showing the last product while it animates closed
@@ -28,7 +34,15 @@ function Storefront() {
   const [modalOpen, setModalOpen] = useState(false);
   const openCount = useRef(0);
 
-  useReveal();
+  // Re-run scroll animations for each page
+  useReveal([path]);
+
+  // Changing page closes any open panel
+  useEffect(() => {
+    setModalOpen(false);
+    setMenuOpen(false);
+    closeCart();
+  }, [path, closeCart]);
 
   const viewProduct = useCallback((product) => {
     openCount.current += 1;
@@ -37,10 +51,7 @@ function Storefront() {
   }, []);
   const closeProduct = useCallback(() => setModalOpen(false), []);
 
-  const showCollection = useCallback((f) => {
-    setFilter(f);
-    document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
-  }, []);
+  const route = matchRoute(path);
 
   return (
     <>
@@ -51,14 +62,9 @@ function Storefront() {
       <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
       <main id="main">
-        <Hero />
-        <CollectionGrid onSelect={showCollection} />
-        <ProductGrid filter={filter} setFilter={setFilter} onView={viewProduct} />
-        <BrandStory />
-        <BestSellers onView={viewProduct} onSeeAll={showCollection} />
-        <Testimonials />
-        <InstagramGallery />
-        <FAQ />
+        {route.page === "home" && <HomePage onView={viewProduct} />}
+        {route.page === "collection" && <CollectionPage key={route.id} id={route.id} onView={viewProduct} />}
+        {route.page === "notfound" && <NotFound />}
       </main>
       <Footer />
 
@@ -77,10 +83,12 @@ function Storefront() {
 
 export default function App() {
   return (
-    <CatalogProvider>
-      <CartProvider>
-        <Storefront />
-      </CartProvider>
-    </CatalogProvider>
+    <RouterProvider>
+      <CatalogProvider>
+        <CartProvider>
+          <Storefront />
+        </CartProvider>
+      </CatalogProvider>
+    </RouterProvider>
   );
 }

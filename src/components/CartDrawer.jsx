@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ShoppingBag, Trash2, X } from "lucide-react";
 import { useCatalog } from "../context/CatalogContext.jsx";
+import { useRouter } from "../router.jsx";
 import { useCart } from "../context/CartContext.jsx";
 import { useDialog } from "../hooks/useDialog.js";
 import { formatPrice } from "../utils/format.js";
@@ -25,6 +26,7 @@ export default function CartDrawer() {
     checkoutStarted,
   } = useCart();
   const { settings } = useCatalog();
+  const { navigate } = useRouter();
   const ref = useDialog(isOpen, closeCart);
   const [confirmClear, setConfirmClear] = useState(false);
 
@@ -35,7 +37,7 @@ export default function CartDrawer() {
 
   const continueShopping = () => {
     closeCart();
-    requestAnimationFrame(() => document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" }));
+    navigate("/collections/all");
   };
 
   return (

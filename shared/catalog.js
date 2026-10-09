@@ -7,7 +7,7 @@
      settings:    { whatsappNumber, instagramUrl, instagramHandle,
                     deliveryFee, freeDeliveryThreshold, deliveryMode,
                     announcements: [] },
-     collections: [{ id, name, image, alt, active, kind }],
+     collections: [{ id, name, description, image, alt, active, kind }],
      products:    [{ id, name, price, originalPrice, category, images,
                     description, material, details, variants,
                     badge, availability, active, shippingFee }]
@@ -93,6 +93,7 @@ function normalizeCollection(raw = {}) {
   return {
     id: str(raw.id, 40),
     name: str(raw.name, 60),
+    description: str(raw.description, 400),
     image: safeUrl(raw.image),
     alt: str(raw.alt, 160),
     active: bool(raw.active, true),

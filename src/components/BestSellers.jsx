@@ -1,9 +1,11 @@
 import { ArrowRight } from "lucide-react";
 import { useCatalog } from "../context/CatalogContext.jsx";
+import { Link } from "../router.jsx";
+import { collectionPath } from "./CollectionGrid.jsx";
 import ProductCard from "./ProductCard.jsx";
 import "./BestSellers.css";
 
-export default function BestSellers({ onView, onSeeAll }) {
+export default function BestSellers({ onView }) {
   const { products, collections, allCollections, isAvailable } = useCatalog();
   const items = products.filter((p) => p.badge === "bestseller" && isAvailable(p)).slice(0, 4);
   // Turning the Best Sellers collection off in the control center hides this section too
@@ -24,9 +26,9 @@ export default function BestSellers({ onView, onSeeAll }) {
             </h2>
           </div>
           {bestCollection && (
-            <button type="button" className="link-underline" onClick={() => onSeeAll(bestCollection.id)}>
+            <Link to={collectionPath(bestCollection.id)} className="link-underline">
               Shop all best sellers <ArrowRight size={15} strokeWidth={1.5} />
-            </button>
+            </Link>
           )}
         </div>
         <div className="best__row">
